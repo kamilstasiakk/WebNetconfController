@@ -1,0 +1,172 @@
+
+<div class="w3-container w3-card-2 w3-margin w3-light-grey">
+
+    <section ng-show="hideConfiguration">
+    <h1>Devices:</h1>
+    <p align="left"><button class="w3-btn w3-green w3-ripple" ng-click="updateDevices()">&#9998; Update</button></p>
+    <table class="w3-table w3-bordered w3-striped">
+        <tr>
+            <th>Edit</th>
+            <th>Name</th>
+            <th>IP address</th>
+            <th>remove</th>
+            <th>configure</th>
+        </tr>
+        <tr ng-repeat="x in devices">
+            <td>
+                <button class="w3-btn w3-ripple" ng-click="editDeviceModeOn($index)">&#9998; Edit</button>
+            </td>
+            <td>{{ x.name }}</td>
+            <td>{{ x.ipAddress }}</td>
+
+            <td><button class="w3-btn w3-red w3-ripple" ng-click="removeItem($index)">&#9998; Remowe</button></td>
+            <td><button class="w3-btn w3-yellow w3-ripple" ng-click="deviceConfigurationModeOn($index)">&#9998; Configure</button></td>
+        </tr>
+    </table>
+    <button class="w3-btn w3-green w3-ripple" ng-click="createDeviceModeOn()">&#9998; Create New Device</button>
+
+
+    <form ng-hide="hideform">
+        <h3 ng-show="edit">Create New Device:</h3>
+        <h3 ng-hide="edit">Edit Device:</h3>
+        <label>Name:</label>
+        <input class="w3-input w3-border" type="text" ng-model="oName" ng-disabled="!edit" placeholder="Name">
+        <br>
+        <label>IP address:</label>
+        <input class="w3-input w3-border" type="text" ng-model="ipAddress" ng-disabled="!edit" placeholder="IP address">
+        <br>
+        <label>Port:</label>
+        <input class="w3-input w3-border" type="number" ng-model="oPort" ng-disabled="!edit" placeholder="Port" required>
+        <br>
+        <label>User:</label>
+        <input class="w3-input w3-border" type="text" ng-model="oUser" ng-disabled="!edit" placeholder="User">
+        <br>
+        <label>Password:</label>
+        <input class="w3-input w3-border" type="password" ng-model="oPassword" ng-disabled="!edit" placeholder="Password">
+        <br >
+        <label ng-hide="edit">New name:</label>
+        <input ng-hide="edit" class="w3-input w3-border" type="text" ng-model="nName" placeholder="New name">
+        <br>
+        <label ng-hide="edit">New port:</label>
+        <input ng-hide="edit" class="w3-input w3-border" type="number" ng-model="nPort" placeholder="New port" required>
+        <br>
+        <label ng-hide="edit">New user:</label>
+        <input ng-hide="edit" class="w3-input w3-border" type="text" ng-model="nUser"  placeholder="New user">
+        <br>
+        <label ng-hide="edit">New password:</label>
+        <input ng-hide="edit" class="w3-input w3-border" type="password" ng-model="nPassword" placeholder="New Password">
+        <br>
+        <button class="w3-btn w3-green w3-ripple" ng-disabled="incomplete" ng-click="confirm()">&#10004; Save Changes</button>
+    </form>
+    </section>
+    <section ng-hide="hideConfiguration">
+        <p align="left"><button class="w3-btn w3-yellow w3-ripple" ng-click="backToDevices()">&#9998; Back to devices</button></p>
+        <h3>Configured device name: {{configuredDeviceName}}</h3>
+        <br>
+        <button class="w3-btn w3-round-large" ng-click="showGeneral()">General</button>
+        <button class="w3-btn w3-round-large" ng-click="showInterfaces()">Interfaces</button>
+        <button class="w3-btn w3-round-large" ng-click="showRouteTable()">Route Table</button>
+        <br>
+        <form ng-show = "showGeneralLock">
+            <p align="right"><button class="w3-btn w3-green w3-ripple" ng-click="updateHostname()">&#9998; Update</button></p>
+            <label>Hostname:</label>
+            <input class="w3-input w3-border" type="text" ng-model="configuredDeviceHostName" ng-disabled="true" placeholder="Hostname">
+            <br>
+            <label>New hostname:</label>
+            <input class="w3-input w3-border" type="text" ng-model="newHostname"  placeholder="New hostname">
+            <br>
+            <button class="w3-btn w3-green w3-ripple" ng-disabled="incompleteGeneral" ng-click="changeHostname()">&#10004; Save Changes</button>
+        </form>
+        <section ng-show = "showInterfaceLock">
+
+            <p align="right"><button class="w3-btn w3-green w3-ripple" ng-click="updateInterfaces()">&#9998; Update</button></p>
+            <table class="w3-table w3-bordered w3-striped">
+                <tr>
+
+                    <th>Name</th>
+                    <th>IP address</th>
+                    <th>Netmask</th>
+                    <th>Status</th>
+                    <th>Protocol</th>
+                    <th>Address source</th>
+                    <th>MAC address</th>
+                    <th>Configure</th>
+                    <th>Clear</th>
+                </tr>
+                <tr ng-repeat="i in interfaces">
+
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.ipAddress }}</td>
+                    <td>{{ i.netmask }}</td>
+                    <td>{{ i.status }}</td>
+                    <td>{{ i.protocol }}</td>
+                    <td>{{ i.addressSource }}</td>
+                    <td>{{ i.macAddress }}</td>
+                    <td><button class="w3-btn w3-yellow w3-ripple" ng-click="interfaceConfigurationModeOn($index)">&#9998; Configure</button></td>
+                    <td><button class="w3-btn w3-yellow w3-ripple"  ng-click="clearInterfaceAddress($index)">&#10004; Clear address</button></td>
+                </tr>
+
+            </table>
+            <form ng-show="interfaceConfigurationModeLock">
+                <h2>Configuring interface: {{configuringInterfaceName}}</h2>
+                <br>
+                <label>IP address:</label>
+                <input class="w3-input w3-border" type="text" ng-model="newInterfaceIpAddress" placeholder="IP address">
+                <br>
+                <label>Netmask:</label>
+                <input class="w3-input w3-border" type="text" ng-model="newInterfaceNetmask" placeholder="Netmask">
+                <br>
+                <label>Administrative status:</label>
+                <input type="checkbox" ng-model="interfaceAdministrativeStatus" >
+                <p ng-show="interfaceAdministrativeStatus">Up</p>
+                <p ng-hide="interfaceAdministrativeStatus">Down</p>
+
+                <button class="w3-btn w3-green w3-ripple" ng-disabled="incompleteInterface" ng-click="changeInterfaceConfiguration()">&#10004; Save Changes</button>
+            </form>
+
+        </section>
+
+        <section ng-show = "showRouteTableLock">
+            <p align="right"><button class="w3-btn w3-green w3-ripple" ng-click="updateRouteTable()">&#9998; Update</button></p>
+
+            <table class="w3-table w3-bordered w3-striped">
+                <tr>
+
+                    <th>prefix</th>
+                    <th>Outgoing interface</th>
+                    <th>Delete</th>
+
+                </tr>
+                <tr ng-repeat="row in routeTable">
+
+                    <td>{{ row.prefix }}</td>
+                    <td>{{ row.nextHop }}</td>
+                    <td><button class="w3-btn w3-red w3-ripple" ng-click="deleteRoute($index)">&#9998; Delete</button></td>
+                </tr>
+            </table>
+            <td><button class="w3-btn w3-yellow w3-ripple" ng-click="addRouteModeOn()">&#9998; Add route</button></td>
+            <br>
+            <br>
+            <form ng-show="addRouteModeLock">
+                <h2>Adding new Route</h2>
+                <br>
+                <label>Destination network IP address:</label>
+                <input class="w3-input w3-border" type="text" ng-model="newDestNetIp" placeholder="IP address">
+                <br>
+                <label>Destination network netmask:</label>
+                <input class="w3-input w3-border" type="text" ng-model="NewDestNetMask" placeholder="Netmask">
+                <br>
+                <label>Outgoing interface:</label>
+                <input class="w3-input w3-border" type="text" ng-model="NewOutInterface" placeholder="Interface">
+                <br>
+                <button class="w3-btn w3-green w3-ripple" ng-disabled="incompleteRoute" ng-click="addNewRoute()">&#10004; Save Changes</button>
+            </form>
+
+        </section>
+
+
+    </section>
+
+
+
+</div>
